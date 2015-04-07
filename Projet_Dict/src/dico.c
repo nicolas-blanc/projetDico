@@ -69,10 +69,37 @@ int get_charnum(maillon_t maillon, int lettre) {
 	return res;
 }
 
+//Fonction retournant le nombre de lettre d'une liste de maillon
+int nb_lettres_maillon(maillon_t* maillons){
+	maillon_t mail_temp = *maillons;
+	int i = 0;
+	while(get_charnum(mail_temp,(i%6))!= 0){
+		i++;
+		if (i%6==0)
+		{
+			mail_temp=mail_temp.maillon_suiv;
+		}
+	}
+	return i;
+}
 
+// Fonction de conversion d'une chaine de caractère en liste de maillons.
+void mot_to_maillon(char* caracs,int nblettres, maillon_t* first_maillon){
+	int i;
+	int nbmaillons;
+	maillon_t mail_temp;
+	mail_temp = first_maillon;
 
-
-
+	for (i = 0; i < nblettres; ++i)
+	{
+		if ((i>=6) && (i%6==0))
+		{
+			mail_temp = mail_temp.maillon_suiv;
+		}
+		set_charnum(mail_temp,char_to_num(caracs[i]),i);
+	}
+	return first_maillon;
+}
 
 int compare_maillons(maillon_t maillon1, maillon_t maillon2) {
 	bool fin = true;
@@ -107,4 +134,24 @@ int compare_maillons(maillon_t maillon1, maillon_t maillon2) {
 
 int compare_mots(mot_t mot1, mot_t mot2) {
 	return compare_maillons(mot1.tete_mot, mot2.tete_mot);
+}
+
+//Fonction de conversion d'une liste de maillons en une chaine de caractère
+char* maillon_to_char(maillon_t maillon){
+	int i;
+	int nblettres=nb_lettres_maillon(maillon);
+	char *chaine=(char *)malloc(sizeof(char)*(nblettres+1));
+
+	maillon_t mail_temp = maillon;
+
+	for (i = 0; i < nblettres; ++i)
+	{
+		if ((i>=6) && (i%6==0)
+		{
+			mail_temp = mail_temp.maillon_suiv;
+		}
+		chaine[i]=char_to_num(get_charnum(mail_temp, i));
+	}
+	chaine[i+1]='\0';
+	return chaine;
 }
