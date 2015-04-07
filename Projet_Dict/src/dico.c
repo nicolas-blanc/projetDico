@@ -37,13 +37,36 @@ char num_to_char(uint8_t code) {
 	return code + 'a' - 1;
 }
 
-void set_charnum(maillon_t maillon, int carac, int lettre) {
-	// Hex : FFFF FFE0
-	uint32_t masque_reset = 0xffffffe0
+// A expliquer dans le rapport
+void set_charnum(maillon_t * maillon, int carac, int lettre) {
+	uint32_t masque_reset = 0x0000001f;
+	uint32_t masque_lettre = 0x00000000;
+
+	// Décalage coorespondant à la place du caractère
+	lettre = (abs(lettre - 5)) * 5;
+
+	// Création du masque qui permet de mettre à 0 l'emplacement du caractère
+	masque_reset = ~(masque_reset << lettre);
+
+	// Création du masque pour mettre la lettre dans le maillon
+	masque_lettre = (~(masque_lettre + ~c)) << lettre;
+
+	// Application des masques sur la maillon
+	*maillon.lettres = (*maillon.lettres & masque_reset) | masque_lettre;
 }
 
 int get_charnum(maillon_t maillon, int lettre) {
+	uint32_t masque_lettre2 = 0x0000001f;
+	uint32_t res = 0x00000000;
 
+	lettre = (abs(lettre - 5)) * 5;
+
+	masque_lettre2 = masque_lettre2 << lettre;
+
+	// Décalage dans l'autre sens pour récuperer la valeur exacte
+	res = (maillon & masque_lettre) >> lettre;
+
+	return res;
 }
 
 //Fonction retournant le nombre de lettre d'une liste de maillon
