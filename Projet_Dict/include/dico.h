@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <math.h>
 
 // Type pour les maillons, si le mot est composé de plus de 6 lettres, un nouveau est créé
 typedef struct maillon_t maillon_t;
@@ -38,8 +39,8 @@ uint8_t char_to_num(char carac);
 char num_to_char(uint8_t code);
 
 // Fonction de modification et consultation de la kieme lettre sur un maillon donné (0 <= k <= 5)
-void set_charnum(maillon_t maillon, char carac, int lettre);
-char get_charnum(maillon_t maillon, int lettre);
+void set_charnum(maillon_t maillon, uint8_t carac, int lettre);
+uint8_t get_charnum(maillon_t * maillon, int lettre);
 
 // Fonction de conversions du chaine de caractère en liste de maillons, et une liste de maillons en chaine de caractère
 
