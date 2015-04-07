@@ -7,7 +7,7 @@ typedef struct maillon_t maillon_t;
 struct maillon_t {
 	uint32_t lettres;
 
-	maillon_t * lettres_suiv;
+	maillon_t * maillon_suiv;
 };
 
 // Type pour les emplacements du mots dans le texte, un pour chaque emplacement
@@ -41,7 +41,14 @@ char num_to_char(uint8_t code);
 void set_charnum(maillon_t maillon, char carac, int lettre);
 char get_charnum(maillon_t maillon, int lettre);
 
-// Fonction de conversions du chaine de caractère en liste de maillons, et une liste de maillons en chaine de caractère
+// Fonction de conversion d'une chaine de caractère en liste de maillons.
+void mot_to_maillon(char* caracs,int nblettres, maillon_t* first_maillon);
+
+//Fonction de conversion d'une liste de maillons en une chaine de caractère
+char* maillon_to_char(maillon_t* maillons);
+
+//Fonction retournant le nombre de lettre d'une liste de maillon
+int nb_lettres_maillon(maillon_t* maillons);
 
 // Fonction de création d'un élèment de type mot_t
 
@@ -55,5 +62,5 @@ int compare_mots(mot_t * mot1, mot_t * mot2);
 // Insère le mot à la fin de la chaine, sans rangement alphabétique et avec duplication
 void insertion_dictionnaire(mot_t * dico, mot_t * mot);
 
-// Fonction d'affichagedu dictionnaire complet
+// Fonction d'affichage du dictionnaire complet
 void affiche_dictionnaire(mot_t * dico);
