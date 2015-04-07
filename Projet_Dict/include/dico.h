@@ -35,12 +35,11 @@ struct mot_t
 };
 
 // Fonction de correspondance entre un caractère et son code
-uint8_t char_to_num(char carac);
-char num_to_char(uint8_t code);
-
+uint32_t char_to_num(char carac);
+char num_to_char(uint32_t code);
 // Fonction de modification et consultation de la kieme lettre sur un maillon donné (0 <= k <= 5)
-void set_charnum(maillon_t maillon, uint8_t carac, int lettre);
-uint8_t get_charnum(maillon_t * maillon, int lettre);
+void set_charnum(maillon_t* maillon, uint32_t carac, int lettre);
+uint32_t get_charnum(maillon_t maillon, int lettre);
 
 // Fonction de conversion d'une chaine de caractère en liste de maillons.
 void mot_to_maillon(char* caracs,int nblettres, maillon_t* first_maillon);
