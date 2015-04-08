@@ -122,7 +122,7 @@ void mot_to_maillon(char* caracs, int nblettres, maillon_t* first_maillon){
 		//printf("%d\n",i );
 		if ((i>=6) && (i%6==0)) {	
 			//printf("Je crée un new maillon.\n");
-			maillon_t* next =(maillon_t*)malloc(sizeof(maillon_t));
+			maillon_t * next = (maillon_t*) malloc(sizeof(maillon_t));
 			next->lettres=0;
 			next->maillon_suiv=NULL;
 			mail_temp->maillon_suiv=next;
@@ -137,7 +137,7 @@ void mot_to_maillon(char* caracs, int nblettres, maillon_t* first_maillon){
 int nbLettres(char * caracs) {
 	int i = 0;
 
-	if (caracs != null)
+	if (caracs != NULL)
 		while(caracs[i] != '\0')
 			i++;
 
@@ -147,35 +147,43 @@ int nbLettres(char * caracs) {
 maillon_t * definir_queue(maillon_t * maillon) {
 	maillon_t * temp = maillon;
 
-	while(temp->maillon_suiv != null)
-		temp = maillon_suiv;
+	while(temp->maillon_suiv != NULL)
+		temp = maillon->maillon_suiv;
 
 	return temp;
 }
 
-mot_t creation_mot(char * caracs, unsigned int nblin, unsigned int nbcol) {
-	maillon_t * maillon;
-	emplacement_t emp = {nblin, nbcol, null};
-	mot_t mot;
+maillon_t * initialise_maillon() {
+	maillon_t * maillon = (maillon_t*) malloc(sizeof(maillon_t));
+
+	maillon->lettres = 0x00000000;
+	maillon->maillon_suiv = NULL;
+
+	return maillon;
+}
+
+void creation_mot(char * caracs, unsigned int nblin, unsigned int nbcol, mot_t * mot) {
+	maillon_t * maillon = initialise_maillon();
+	emplacement_t emp = {nblin, nbcol, NULL};
 
 	mot_to_maillon(caracs, nbLettres(caracs), maillon);
 
-	mot.tete_mot = maillon;
-	mot.queue_mot = definir_queue(maillon);
+	mot->tete_mot = maillon;
+	mot->queue_mot = definir_queue(maillon);
 
-	mot.tete_liste = &emp;
-	mot.queue_liste = &emp;
+	mot->tete_liste = &emp;
+	mot->queue_liste = &emp;
 }
 
 // Fonction qui compare deux maillon et retourne un entier nul si ils sont égaux, négatif si le 1er maillon est plus petit que le 2e maillon, positif sinon
-int compare_maillons(maillon_t maillon1, maillon_t maillon2) {
+int compare_maillons(maillon_t * maillon1, maillon_t * maillon2) {
 	int fin = 1;
 	int res = 0;
 
 	int i = 0;
 
-	char * mot1 = maillon_to_char(&maillon1);
-	char * mot2 = maillon_to_char(&maillon2);
+	char * mot1 = maillon_to_char(maillon1);
+	char * mot2 = maillon_to_char(maillon2);
 
 	while(fin) {
 		if (mot1[i] == '\0' || mot2[i] == '\0') {
@@ -187,7 +195,7 @@ int compare_maillons(maillon_t maillon1, maillon_t maillon2) {
 		} else {
 			if (mot1[i] != mot2[i]) {
 				fin = 0;
-				res = mot1[i] - mot2[i]
+				res = mot1[i] - mot2[i];
 			}
 		}
 		i++;
