@@ -117,6 +117,41 @@ void mot_to_maillon(char* caracs,int nblettres, maillon_t* first_maillon){
 	
 }
 
+int compare_maillons(maillon_t maillon1, maillon_t maillon2) {
+	bool fin = true;
+	int res = 0;
+
+	int i = 0;
+
+	char * mot1 = maillon_to_char(maillon1);
+	char * mot2 = maillon_to_char(maillon2);
+
+	while(fin) {
+		if (mot1[i] == '\0' || mot2[i] == '\0') {
+			fin = false;
+			if (mot1[i] == '\0')
+				res -= 1;
+			if (mot2[i] == '\0')
+				res += 1;
+		} else {
+			if (mot1[i] != mot2[i]) {
+				fin = false;
+				if (mot1[i] < mot2[i])
+					res = -1;
+				else
+					res = 1;
+			}
+		}
+		i++;
+	}
+
+	return res;
+}
+
+int compare_mots(mot_t mot1, mot_t mot2) {
+	return compare_maillons(mot1.tete_mot, mot2.tete_mot);
+}
+
 //Fonction de conversion d'une liste de maillons en une chaine de caractère
 char* maillon_to_char(maillon_t* maillon){
 	int i;
