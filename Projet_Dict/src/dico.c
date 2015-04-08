@@ -94,9 +94,9 @@ int nb_lettres_maillon(maillon_t* maillons){
 //Fonction de conversion d'une liste de maillons en une chaine de caractère
 char* maillon_to_char(maillon_t* maillon){
 	int i;
-	printf("Je suis dans maillon to char.\n");
+	//printf("Je suis dans maillon to char.\n");
 	int nblettres=nb_lettres_maillon(maillon);
-	printf("J'ai compté les lettres.%d\n",nblettres);
+	//printf("J'ai compté les lettres.%d\n",nblettres);
 	char *chaine=(char *)malloc(sizeof(char)*(nblettres+1));
 
 	maillon_t* mail_temp = maillon;
@@ -113,6 +113,16 @@ char* maillon_to_char(maillon_t* maillon){
 	return chaine;
 }
 
+// Retourne un maillon vide
+maillon_t * initialise_maillon() {
+	maillon_t * maillon = (maillon_t*) malloc(sizeof(maillon_t));
+
+	maillon->lettres = 0x00000000;
+	maillon->maillon_suiv = NULL;
+
+	return maillon;
+}
+
 void mot_to_maillon(char* caracs, int nblettres, maillon_t* first_maillon){
 	int i;
 
@@ -122,7 +132,7 @@ void mot_to_maillon(char* caracs, int nblettres, maillon_t* first_maillon){
 		//printf("%d\n",i );
 		if ((i>=6) && (i%6==0)) {	
 			//printf("Je crée un new maillon.\n");
-			maillon_t * next = (maillon_t*) malloc(sizeof(maillon_t));
+			maillon_t * next = initialise_maillon();  //(maillon_t*) malloc(sizeof(maillon_t));
 			next->lettres=0;
 			next->maillon_suiv=NULL;
 			mail_temp->maillon_suiv=next;
@@ -134,6 +144,7 @@ void mot_to_maillon(char* caracs, int nblettres, maillon_t* first_maillon){
 	
 }
 
+// Compte le nombre de lettre dans un tableau de char jusqu'au symbole de fin de chaine ('\')
 int nbLettres(char * caracs) {
 	int i = 0;
 
@@ -144,6 +155,7 @@ int nbLettres(char * caracs) {
 	return i;
 }
 
+// Retourne le dernier maillon d'une chaine de maillon
 maillon_t * definir_queue(maillon_t * maillon) {
 	maillon_t * temp = maillon;
 
@@ -153,26 +165,39 @@ maillon_t * definir_queue(maillon_t * maillon) {
 	return temp;
 }
 
-maillon_t * initialise_maillon() {
-	maillon_t * maillon = (maillon_t*) malloc(sizeof(maillon_t));
+emplacement_t * initialise_emplacement(unsigned int l, unsigned int c) {
+	emplacement_t * empl = (emplacement_t*) malloc(sizeof(emplacement_t));
 
-	maillon->lettres = 0x00000000;
-	maillon->maillon_suiv = NULL;
+	empl->ligne = l;
+	empl->colonne = c;
+	empl->empl_suiv = NULL;
 
-	return maillon;
+	return empl;
 }
 
 void creation_mot(char * caracs, unsigned int nblin, unsigned int nbcol, mot_t * mot) {
 	maillon_t * maillon = initialise_maillon();
-	emplacement_t emp = {nblin, nbcol, NULL};
+	emplacement_t * emp = initialise_emplacement(nblin, nbcol);
 
 	mot_to_maillon(caracs, nbLettres(caracs), maillon);
 
 	mot->tete_mot = maillon;
 	mot->queue_mot = definir_queue(maillon);
 
-	mot->tete_liste = &emp;
-	mot->queue_liste = &emp;
+	mot->tete_liste = emp;
+	mot->queue_liste = emp;
+}
+
+void affiche_mot(mot_t * mot){
+	emplacement_t * empl = mot->tete_liste;
+
+	char * cmot = maillon_to_char(mot->tete_mot);
+	printf("%s\n", cmot);
+
+	while(empl != NULL) {
+		printf("		-> %d / %d\n", empl->ligne, empl->colonne);
+		empl = empl->empl_suiv;
+	}
 }
 
 // Fonction qui compare deux maillon et retourne un entier nul si ils sont égaux, négatif si le 1er maillon est plus petit que le 2e maillon, positif sinon
@@ -182,8 +207,8 @@ int compare_maillons(maillon_t * maillon1, maillon_t * maillon2) {
 
 	int i = 0;
 
-	char * mot1 = maillon_to_char(&maillon1);
-	char * mot2 = maillon_to_char(&maillon2);
+	char * mot1 = maillon_to_char(maillon1);
+	char * mot2 = maillon_to_char(maillon2);
 
 	while(fin) {
 		if (mot1[i] == '\0' || mot2[i] == '\0') {
@@ -208,3 +233,19 @@ int compare_mots(mot_t mot1, mot_t mot2) {
 	return compare_maillons(mot1.tete_mot, mot2.tete_mot);
 }
 
+mot_t * insere_tete(mot_t * dico, mot_t * mot){
+	mot->mot_suiv = dico;
+	return mot;
+}
+
+void insertion_dictionnaire(mot_t * dico, mot_t * mot) {
+	dico = insere_tete(dico, mot);
+}
+
+void affiche_dictionnaire(mot_t * dico) {
+	mot_t * temp = dico;
+
+	while(temp != NULL) {
+		affiche_mot(temp);
+	}
+}

@@ -18,7 +18,7 @@ struct emplacement_t
 	unsigned int ligne;
 	unsigned int colonne;
 
-	emplacement_t * emplacement_t;
+	emplacement_t * empl_suiv;
 };
 
 // Type qui permet de stocker les mots dans la liste chainée
@@ -48,6 +48,7 @@ void mot_to_maillon(char * caracs, int nblettres, maillon_t * first_maillon);
 void creation_mot(char * caracs, unsigned int nblin, unsigned int nbcol, mot_t * mot);
 
 // Fonction d'affichage d'un mot de type mot_t
+void affiche_mot(mot_t * mot);
 
 // Fonction de comparaison de deux mot_t
 // retourne 0 si les deux sont identiques, un entier négatif si le premier est alphabétiquement plus petit, un entier positif sinon
