@@ -15,8 +15,8 @@ struct maillon_t {
 typedef struct emplacement_t emplacement_t;
 struct emplacement_t
 {
-	int ligne;
-	int colonne;
+	unsigned int ligne;
+	unsigned int colonne;
 
 	emplacement_t * emplacement_t;
 };
@@ -42,21 +42,16 @@ void set_charnum(maillon_t* maillon, uint32_t carac, int lettre);
 uint32_t get_charnum(maillon_t maillon, int lettre);
 
 // Fonction de conversion d'une chaine de caractère en liste de maillons.
-void mot_to_maillon(char* caracs,int nblettres, maillon_t* first_maillon);
-
-//Fonction de conversion d'une liste de maillons en une chaine de caractère
-char* maillon_to_char(maillon_t* maillons);
-
-//Fonction retournant le nombre de lettre d'une liste de maillon
-int nb_lettres_maillon(maillon_t* maillons);
+void mot_to_maillon(char * caracs, int nblettres, maillon_t * first_maillon);
 
 // Fonction de création d'un élèment de type mot_t
+void creation_mot(char * caracs, unsigned int nblin, unsigned int nbcol, mot_t * mot);
 
 // Fonction d'affichage d'un mot de type mot_t
 
 // Fonction de comparaison de deux mot_t
 // retourne 0 si les deux sont identiques, un entier négatif si le premier est alphabétiquement plus petit, un entier positif sinon
-int compare_mots(mot_t * mot1, mot_t * mot2);
+int compare_mots(mot_t mot1, mot_t mot2);
 
 // Fonction d'insertion d'un mot de type mot_t dans un dictionnaire
 // Insère le mot à la fin de la chaine, sans rangement alphabétique et avec duplication
