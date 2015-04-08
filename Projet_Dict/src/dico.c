@@ -118,13 +118,13 @@ void mot_to_maillon(char* caracs,int nblettres, maillon_t* first_maillon){
 }
 
 int compare_maillons(maillon_t maillon1, maillon_t maillon2) {
-	bool fin = true;
+	Boolean fin = TRUE;
 	int res = 0;
 
 	int i = 0;
 
-	char * mot1 = maillon_to_char(maillon1);
-	char * mot2 = maillon_to_char(maillon2);
+	char * mot1 = maillon_to_char(&maillon1);
+	char * mot2 = maillon_to_char(&maillon2);
 
 	while(fin) {
 		if (mot1[i] == '\0' || mot2[i] == '\0') {
