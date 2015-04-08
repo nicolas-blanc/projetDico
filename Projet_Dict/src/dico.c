@@ -80,31 +80,47 @@ int nb_lettres_maillon(maillon_t* maillons){
 	i=0;
 
 	if (mail_temp->maillon_suiv!=NULL)
-	{
 		mail_temp=mail_temp->maillon_suiv;
-	}
+
 	for (i = 0; i < 6; ++i)
-	{
 		if (get_charnum(*mail_temp,(i))!= 0)
-		{
 			compt+=1;
-		}
 	}
-}
-return compt;
+
+	return compt;
 }
 
-// Fonction de conversion d'une chaine de caractère en liste de maillons.
-void mot_to_maillon(char* caracs,int nblettres, maillon_t* first_maillon){
+
+//Fonction de conversion d'une liste de maillons en une chaine de caractère
+char* maillon_to_char(maillon_t* maillon){
+	int i;
+	printf("Je suis dans maillon to char.\n");
+	int nblettres=nb_lettres_maillon(maillon);
+	printf("J'ai compté les lettres.%d\n",nblettres);
+	char *chaine=(char *)malloc(sizeof(char)*(nblettres+1));
+
+	maillon_t* mail_temp = maillon;
+
+	for (i = 0; i < nblettres; ++i) {
+		if ((i>=6) && (i%6==0)) {
+			mail_temp = mail_temp->maillon_suiv;
+		}
+
+		printf("%d\n",get_charnum(*mail_temp, i%6));
+		chaine[i]=num_to_char(get_charnum(*mail_temp, i%6));
+	}
+	chaine[i+1]='\0';
+	return chaine;
+}
+
+void mot_to_maillon(char* caracs, int nblettres, maillon_t* first_maillon){
 	int i;
 
 	maillon_t* mail_temp = first_maillon;
 
-	for (i = 0; i < nblettres; ++i)
-	{
+	for (i = 0; i < nblettres; ++i) {
 		//printf("%d\n",i );
-		if ((i>=6) && (i%6==0))
-		{	
+		if ((i>=6) && (i%6==0)) {	
 			//printf("Je crée un new maillon.\n");
 			maillon_t* next =(maillon_t*)malloc(sizeof(maillon_t));
 			next->lettres=0;
@@ -112,34 +128,66 @@ void mot_to_maillon(char* caracs,int nblettres, maillon_t* first_maillon){
 			mail_temp->maillon_suiv=next;
 			mail_temp=next;
 		}
+
 		set_charnum(mail_temp,char_to_num(caracs[i]),i);
 	}
 	
 }
 
+int nbLettres(char * caracs) {
+	int i = 0;
+
+	if (caracs != null)
+		while(caracs[i] != '\0')
+			i++;
+
+	return i;
+}
+
+maillon_t * definir_queue(maillon_t * maillon) {
+	maillon_t * temp = maillon;
+
+	while(temp->maillon_suiv != null)
+		temp = maillon_suiv;
+
+	return temp;
+}
+
+mot_t creation_mot(char * caracs, unsigned int nblin, unsigned int nbcol) {
+	maillon_t * maillon;
+	emplacement_t emp = {nblin, nbcol, null};
+	mot_t mot;
+
+	mot_to_maillon(caracs, nbLettres(caracs), maillon);
+
+	mot.tete_mot = maillon;
+	mot.queue_mot = definir_queue(maillon);
+
+	mot.tete_liste = &emp;
+	mot.queue_liste = &emp;
+}
+
+// Fonction qui compare deux maillon et retourne un entier nul si ils sont égaux, négatif si le 1er maillon est plus petit que le 2e maillon, positif sinon
 int compare_maillons(maillon_t maillon1, maillon_t maillon2) {
-	bool fin = true;
+	int fin = 1;
 	int res = 0;
 
 	int i = 0;
 
-	char * mot1 = maillon_to_char(maillon1);
-	char * mot2 = maillon_to_char(maillon2);
+	char * mot1 = maillon_to_char(&maillon1);
+	char * mot2 = maillon_to_char(&maillon2);
 
 	while(fin) {
 		if (mot1[i] == '\0' || mot2[i] == '\0') {
-			fin = false;
+			fin = 0;
 			if (mot1[i] == '\0')
 				res -= 1;
 			if (mot2[i] == '\0')
 				res += 1;
 		} else {
 			if (mot1[i] != mot2[i]) {
-				fin = false;
-				if (mot1[i] < mot2[i])
-					res = -1;
-				else
-					res = 1;
+				fin = 0;
+				res = mot1[i] - mot2[i]
 			}
 		}
 		i++;
@@ -152,25 +200,3 @@ int compare_mots(mot_t mot1, mot_t mot2) {
 	return compare_maillons(mot1.tete_mot, mot2.tete_mot);
 }
 
-//Fonction de conversion d'une liste de maillons en une chaine de caractère
-char* maillon_to_char(maillon_t* maillon){
-	int i;
-	printf("Je suis dans maillon to char.\n");
-	int nblettres=nb_lettres_maillon(maillon);
-	printf("J'ai compté les lettres.%d\n",nblettres);
-	char *chaine=(char *)malloc(sizeof(char)*(nblettres+1));
-
-	maillon_t* mail_temp = maillon;
-
-	for (i = 0; i < nblettres; ++i)
-	{
-		if ((i>=6) && (i%6==0))
-		{
-			mail_temp = mail_temp->maillon_suiv;
-		}
-		printf("%d\n",get_charnum(*mail_temp, i%6));
-		chaine[i]=num_to_char(get_charnum(*mail_temp, i%6));
-	}
-	chaine[i+1]='\0';
-	return chaine;
-}
