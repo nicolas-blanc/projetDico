@@ -56,7 +56,7 @@ void set_charnum(maillon_t* maillon,  uint32_t carac, int lettre) {
 }
 
 uint32_t get_charnum(maillon_t maillon, int lettre) {
-	uint32_t masque_lettre = 0x0000001f;
+	uint32_t masque_lettre = 0x0000001f;	
 	uint32_t res = 0x00000000;
 
 	lettre = (abs(lettre - 5)) * 5;
@@ -74,11 +74,11 @@ int nb_lettres_maillon(maillon_t* maillons){
 	maillon_t* mail_temp = maillons;
 	int compt=0;
 
-	while((get_charnum(*mail_temp,(compt))!= 0)){
-
-		if ((compt>=5) && (compt%5 ==1) && mail_temp->maillon_suiv!=NULL)
+	while((mail_temp != NULL) && (get_charnum(*mail_temp,(compt%6))!= 0)){
+		printf("Mon modulo:%d\n",compt%6);
+		if ((compt>=6) && (compt%6 ==0)){
 			mail_temp=mail_temp->maillon_suiv;
-
+		}
 		compt+=1;
 	}
 
@@ -100,9 +100,9 @@ char* maillon_to_char(maillon_t* maillon){
 	for (i = 0; i < nblettres; ++i) {
 		if ((i>=6) && (i%6==0)) {
 			mail_temp = mail_temp->maillon_suiv;
+			printf("%08x\n", mail_temp->lettres);
 		}
-
-		printf("%d\n",get_charnum(*mail_temp, i%6));
+		//("%d\n",get_charnum(*mail_temp, i%6));
 		chaine[i]=num_to_char(get_charnum(*mail_temp, i%6));
 	}
 	chaine[i+1]='\0';
@@ -123,11 +123,11 @@ void mot_to_maillon(char* caracs, int nblettres, maillon_t* first_maillon){
 	int i;
 
 	maillon_t* mail_temp = first_maillon;
-
+	printf("%d\n", nblettres);
 	for (i = 0; i < nblettres; ++i) {
-		//printf("%d\n",i );
-		if ((i>=5) && (i%5==1)) {	
-			//printf("Je crée un new maillon.\n");
+		//printf("Boucle mot_to_maillon:%d\n",i );
+		if ((i>=6) && (i%6==0)) {	
+			printf("Je crée un new maillon.\n");
 			maillon_t * next = initialise_maillon();  //(maillon_t*) malloc(sizeof(maillon_t));
 			/*next->lettres=0;
 			next->maillon_suiv=NULL;*/
@@ -135,7 +135,7 @@ void mot_to_maillon(char* caracs, int nblettres, maillon_t* first_maillon){
 			mail_temp=next;
 		}
 
-		set_charnum(mail_temp,char_to_num(caracs[i]),i);
+		set_charnum(mail_temp,char_to_num(caracs[i]),i%6);
 	}
 	
 }

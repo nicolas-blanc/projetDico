@@ -45,6 +45,7 @@ int main(int argc, char **argv) {
 		maillon_t* test =(maillon_t*)malloc(sizeof(maillon_t));
 		test->maillon_suiv=NULL;
 		test->lettres=0;
+		printf("%s\n",word );
 		mot_to_maillon(word,i,test);
 		char * word2;
 		word2=maillon_to_char(test);
