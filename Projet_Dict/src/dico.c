@@ -73,20 +73,16 @@ uint32_t get_charnum(maillon_t maillon, int lettre) {
 int nb_lettres_maillon(maillon_t* maillons){
 	maillon_t* mail_temp = maillons;
 	int compt=0;
-	int i = 5;
 
+	while((get_charnum(*mail_temp,(compt))!= 0)){
 
-	while(i==5){
-	i=0;
+		if ((compt>=5) && (compt%5 ==1) && mail_temp->maillon_suiv!=NULL)
+			mail_temp=mail_temp->maillon_suiv;
 
-	if (mail_temp->maillon_suiv!=NULL)
-		mail_temp=mail_temp->maillon_suiv;
-
-	for (i = 0; i < 6; ++i)
-		if (get_charnum(*mail_temp,(i))!= 0)
-			compt+=1;
+		compt+=1;
 	}
 
+	printf("J'ai %d lettres.\n", compt);
 	return compt;
 }
 
@@ -130,11 +126,11 @@ void mot_to_maillon(char* caracs, int nblettres, maillon_t* first_maillon){
 
 	for (i = 0; i < nblettres; ++i) {
 		//printf("%d\n",i );
-		if ((i>=6) && (i%6==0)) {	
+		if ((i>=5) && (i%5==1)) {	
 			//printf("Je crée un new maillon.\n");
 			maillon_t * next = initialise_maillon();  //(maillon_t*) malloc(sizeof(maillon_t));
-			next->lettres=0;
-			next->maillon_suiv=NULL;
+			/*next->lettres=0;
+			next->maillon_suiv=NULL;*/
 			mail_temp->maillon_suiv=next;
 			mail_temp=next;
 		}

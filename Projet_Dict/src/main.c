@@ -37,11 +37,13 @@ int main(int argc, char **argv) {
 	mail_temp.lettres=0;
 
 	while(!feof(mon_fichier)){
+		i=0;
 		word = next_word(mon_fichier,&ligne,&colonne);
 		while(word[i]!='\0'){
 			i++;
 		}
 		maillon_t* test =(maillon_t*)malloc(sizeof(maillon_t));
+		test->maillon_suiv=NULL;
 		test->lettres=0;
 		mot_to_maillon(word,i,test);
 		char * word2;
