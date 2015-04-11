@@ -30,8 +30,13 @@ struct mot_t
 
 	emplacement_t * tete_liste;
 	emplacement_t * queue_liste;
+};
 
-	mot_t * mot_suiv;
+typedef struct dico_t dico_t;
+struct dico_t
+{
+	mot_t * mot;
+	dico_t* suivant;
 };
 
 // Fonction de correspondance entre un caractère et son code
@@ -50,13 +55,15 @@ void creation_mot(char * caracs, unsigned int nblin, unsigned int nbcol, mot_t *
 // Fonction d'affichage d'un mot de type mot_t
 void affiche_mot(mot_t * mot);
 
+//Fonction affichant le contenu du dictionnaire
+void affiche_dico(dico_t* dico);
+
 // Fonction de comparaison de deux mot_t
 // retourne 0 si les deux sont identiques, un entier négatif si le premier est alphabétiquement plus petit, un entier positif sinon
-int compare_mots(mot_t mot1, mot_t mot2);
+int compare_mots(mot_t* mot1, mot_t* mot2);
+
+dico_t* insere_tete(dico_t * dico, mot_t * mot);
 
 // Fonction d'insertion d'un mot de type mot_t dans un dictionnaire
 // Insère le mot à la fin de la chaine, sans rangement alphabétique et avec duplication
-void insertion_dictionnaire(mot_t * dico, mot_t * mot);
-
-// Fonction d'affichage du dictionnaire complet
-void affiche_dictionnaire(mot_t * dico);
+dico_t* insertion_dictionnaire(dico_t * dico, mot_t * mot);

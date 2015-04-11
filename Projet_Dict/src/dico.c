@@ -75,14 +75,17 @@ int nb_lettres_maillon(maillon_t* maillons){
 	int compt=0;
 
 	while((mail_temp != NULL) && (get_charnum(*mail_temp,(compt%6))!= 0)){
-		printf("Mon modulo:%d\n",compt%6);
+		//printf("Mon modulo:%d\n",compt%6);
 		if ((compt>=6) && (compt%6 ==0)){
 			mail_temp=mail_temp->maillon_suiv;
 		}
-		compt+=1;
+		if (mail_temp != NULL)
+		{
+			compt+=1;	
+		}
 	}
 
-	printf("J'ai %d lettres.\n", compt);
+	//	printf("J'ai %d lettres.\n", compt);
 	return compt;
 }
 
@@ -100,7 +103,7 @@ char* maillon_to_char(maillon_t* maillon){
 	for (i = 0; i < nblettres; ++i) {
 		if ((i>=6) && (i%6==0)) {
 			mail_temp = mail_temp->maillon_suiv;
-			printf("%08x\n", mail_temp->lettres);
+			//printf("%08x\n", mail_temp->lettres);
 		}
 		//("%d\n",get_charnum(*mail_temp, i%6));
 		chaine[i]=num_to_char(get_charnum(*mail_temp, i%6));
@@ -123,14 +126,9 @@ void mot_to_maillon(char* caracs, int nblettres, maillon_t* first_maillon){
 	int i;
 
 	maillon_t* mail_temp = first_maillon;
-	printf("%d\n", nblettres);
 	for (i = 0; i < nblettres; ++i) {
-		//printf("Boucle mot_to_maillon:%d\n",i );
 		if ((i>=6) && (i%6==0)) {	
-			printf("Je crée un new maillon.\n");
-			maillon_t * next = initialise_maillon();  //(maillon_t*) malloc(sizeof(maillon_t));
-			/*next->lettres=0;
-			next->maillon_suiv=NULL;*/
+			maillon_t * next = initialise_maillon();
 			mail_temp->maillon_suiv=next;
 			mail_temp=next;
 		}
@@ -156,7 +154,7 @@ maillon_t * definir_queue(maillon_t * maillon) {
 	maillon_t * temp = maillon;
 
 	while(temp->maillon_suiv != NULL)
-		temp = maillon->maillon_suiv;
+		temp = temp->maillon_suiv;
 
 	return temp;
 }
@@ -176,25 +174,35 @@ void creation_mot(char * caracs, unsigned int nblin, unsigned int nbcol, mot_t *
 	emplacement_t * emp = initialise_emplacement(nblin, nbcol);
 
 	mot_to_maillon(caracs, nbLettres(caracs), maillon);
-
 	mot->tete_mot = maillon;
 	mot->queue_mot = definir_queue(maillon);
-
 	mot->tete_liste = emp;
 	mot->queue_liste = emp;
 }
 
 void affiche_mot(mot_t * mot){
+	maillon_t* tete = mot->tete_mot;
 	emplacement_t * empl = mot->tete_liste;
 
-	char * cmot = maillon_to_char(mot->tete_mot);
-	printf("%s\n", cmot);
-
+	char * cmot = maillon_to_char(tete);
+	printf("%s", cmot);
+	printf(" -->");
 	while(empl != NULL) {
-		printf("		-> %d / %d\n", empl->ligne, empl->colonne);
+		printf("  [%d/%d]", empl->ligne, empl->colonne);
 		empl = empl->empl_suiv;
 	}
+	printf("\n");
 }
+
+void affiche_dico(dico_t* dico){
+	dico_t* temp = dico;
+	printf("Voici le contenu du dictionnaire:\n");
+	while(temp != NULL){
+		affiche_mot(temp->mot);
+		temp = temp->suivant;
+	}
+}
+
 
 // Fonction qui compare deux maillon et retourne un entier nul si ils sont égaux, négatif si le 1er maillon est plus petit que le 2e maillon, positif sinon
 int compare_maillons(maillon_t * maillon1, maillon_t * maillon2) {
@@ -225,23 +233,117 @@ int compare_maillons(maillon_t * maillon1, maillon_t * maillon2) {
 	return res;
 }
 
-int compare_mots(mot_t mot1, mot_t mot2) {
-	return compare_maillons(mot1.tete_mot, mot2.tete_mot);
-}
+//Fonction de comparasion de mots
+//Si mot1 == mot2 -> 0
+//Si mot1 < mot2 -> -1
+//Si mot1 > mot2 -> 1
+int compare_mots(mot_t* mot1, mot_t* mot2) {
 
-mot_t * insere_tete(mot_t * dico, mot_t * mot){
-	mot->mot_suiv = dico;
-	return mot;
-}
+	maillon_t* m1 = mot1->tete_mot;
+	maillon_t* m2 = mot2->tete_mot;
+	int compare = 2;
 
-void insertion_dictionnaire(mot_t * dico, mot_t * mot) {
-	dico = insere_tete(dico, mot);
-}
-
-void affiche_dictionnaire(mot_t * dico) {
-	mot_t * temp = dico;
-
-	while(temp != NULL) {
-		affiche_mot(temp);
+	while (compare == 2) {
+		if (m1->lettres < m2->lettres) {
+			compare = -1;
+		} else if (m1->lettres > m2->lettres) {
+			compare = 1;
+		} else {
+			m1 = m1->maillon_suiv;
+			m2 = m2->maillon_suiv;
+			if (m1 == NULL && m2 == NULL) {
+				compare = 0;
+			} else if (m1 != NULL && m2 == NULL) {
+				compare = -1;
+			} else if (m1 == NULL && m2 != NULL) {
+				compare = 1;
+			}
+		}
 	}
+	return compare;
+}
+
+//Fonction réalisant une simple insertion en tête de liste.
+dico_t* insere_tete(dico_t* dico, mot_t * mot){
+	dico_t* d = (dico_t*)malloc(sizeof(dico_t));
+	d->mot=mot;
+	d->suivant = dico;
+	return d;
+}
+
+void ajoute_emplacement(emplacement_t* emp, int ligne, int colonne){
+	emplacement_t* e_temp = emp;
+
+	while(e_temp->empl_suiv !=NULL){
+		e_temp=e_temp-> empl_suiv;
+	}
+
+	e_temp->empl_suiv=(emplacement_t*)malloc(sizeof(emplacement_t));
+
+	e_temp=e_temp-> empl_suiv;
+	e_temp->ligne=ligne;
+	e_temp->colonne=colonne;
+	e_temp->empl_suiv=NULL;
+}
+
+//Fonction insérant un mot dans un dictionnaire
+dico_t* insertion_dictionnaire(dico_t * dico, mot_t * mot) {
+	
+	dico_t* d_temp = dico;
+	dico_t* pred = NULL;
+
+	if (d_temp->mot != NULL)
+	{
+		//Le dico est pas vide, on cherche l'emplacement du mot.
+		while(compare_mots(d_temp->mot,mot) < 0 && d_temp->suivant != NULL)
+		{	
+			printf("WOUI\n");
+			pred = d_temp;
+			d_temp = d_temp->suivant;
+		}
+
+		//Le mot courant est plus grand que le mot à insérer.
+		if (compare_mots(d_temp->mot,mot) > 0)
+		{
+			printf("Plus grand\n");
+			/*d_temp=insere_tete(d_temp,mot);
+			if (pred != NULL)
+			{
+				printf("PAsser dans le test\n");
+				pred->suivant=d_temp;
+			}*/
+
+
+			pred = d_temp->suivant;
+			d_temp->suivant = (dico_t*)malloc(sizeof(dico_t));
+			if (d_temp->suivant == NULL) {
+				fprintf(stderr, "Allocation impossible (ajout_dico).\n");
+				exit(EXIT_FAILURE);
+			}
+			d_temp->suivant->mot = mot;
+			d_temp->suivant->suivant = pred;
+
+
+		}
+		else if (compare_mots(d_temp->mot,mot) < 0)
+		{
+			printf("Plus petit\n");
+			d_temp->suivant=(dico_t*)malloc(sizeof(dico_t));
+			d_temp->suivant->mot = mot;
+			d_temp->suivant->suivant=NULL;
+		}
+		else {
+			printf("Deja la\n");
+			ajoute_emplacement(d_temp->mot->tete_liste,mot->tete_liste->ligne,mot->tete_liste->colonne);
+		}
+
+	}
+	else {
+		// Si le dico est vide
+		// On ajoute le mot
+		dico->mot = mot;
+		dico->suivant = NULL;
+	}
+
+	return dico;
 }

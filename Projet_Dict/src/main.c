@@ -29,32 +29,27 @@ int main(int argc, char **argv) {
 	unsigned int ligne;
 	unsigned int colonne;
 
-	char *word=(char *)malloc(sizeof(char)*26);
-
 	int i=0;
-	maillon_t mail_temp;
-	mail_temp.maillon_suiv=NULL;
-	mail_temp.lettres=0;
+	dico_t * dicotest =  (dico_t*)malloc(sizeof(dico_t));
+	dicotest->suivant=NULL;
+	dicotest->mot=NULL;
+
+if (dicotest!=NULL)
 
 	while(!feof(mon_fichier)){
 		i=0;
-		word = next_word(mon_fichier,&ligne,&colonne);
+		char * word = next_word(mon_fichier,&ligne,&colonne);
 		while(word[i]!='\0'){
 			i++;
 		}
-		maillon_t* test =(maillon_t*)malloc(sizeof(maillon_t));
-		test->maillon_suiv=NULL;
-		test->lettres=0;
-		printf("%s\n",word );
-		mot_to_maillon(word,i,test);
-		char * word2;
-		word2=maillon_to_char(test);
-		printf("%s\n",word2);
-		free(test);
+		mot_t* mot =(mot_t*)malloc(sizeof(mot_t));
+		creation_mot(word,ligne,colonne,mot);
+		affiche_mot(mot);
+		dicotest=insertion_dictionnaire(dicotest,mot);
 	}
 
+	affiche_dico(dicotest);
 	fclose(mon_fichier);
-
 
   return 0;
 }
