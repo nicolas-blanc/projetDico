@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "read_word.h"
-#include "dico.h"
+
+#include "../include/read_word.h"
+#include "../include/dico.h"
+#include "../include/mot.h"
 
 int main(int argc, char **argv) {
 
