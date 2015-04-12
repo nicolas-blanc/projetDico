@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#ifndef MAILLON_H
+#define MAILLON_H
 // Type pour les maillons, si le mot est composé de plus de 6 lettres, un nouveau est créé
 typedef struct maillon_t maillon_t;
 struct maillon_t {
@@ -10,6 +12,7 @@ struct maillon_t {
 	maillon_t * maillon_suiv;
 };
 
+#endif /* MAILLON_H */
 
 // A expliquer dans le rapport
 void set_charnum(maillon_t* maillon,  uint32_t carac, int lettre);
