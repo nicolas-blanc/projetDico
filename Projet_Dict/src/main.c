@@ -31,23 +31,23 @@ int main(int argc, char **argv) {
 	unsigned int ligne;
 	unsigned int colonne;
 
-	dico_t * dicotest =  nouveau_dictionnaire();
+	dico_t * dico =  nouveau_dictionnaire();
 	mot_t* mot;
 
-if (dicotest != NULL)
+if (dico != NULL)
 
 	while(!feof(mon_fichier)){
+		// On lit une chaine de caractère dans le fichier
 		char * word = next_word(mon_fichier,&ligne,&colonne);
-		printf("1\n");
+
+		// on créé un nouveau mot à partir de la chaine de caractère
 		mot = creation_mot(word,ligne,colonne);
-		printf("2\n");
-		affiche_mot(mot);
-		printf("3\n");
-		dicotest = insertion_dictionnaire(dicotest,mot);
-		printf("4\n");
+		// affiche_mot(mot);
+		// On insère ce mot dans le dictionnaire
+		dico = insertion_dictionnaire(dico,mot);
 	}
 
-	affiche_dico(dicotest);
+	affiche_dico(dico);
 	fclose(mon_fichier);
 
   return 0;

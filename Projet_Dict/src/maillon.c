@@ -40,17 +40,13 @@ int nb_lettres_maillon(maillon_t* maillons){
 	int compt=0;
 
 	while((mail_temp != NULL) && (get_charnum(*mail_temp,(compt%6))!= 0)){
-		//printf("Mon modulo:%d\n",compt%6);
-		if ((compt>=6) && (compt%6 ==0)){
+		if ((compt>=6) && (compt%6 ==0))
 			mail_temp=mail_temp->maillon_suiv;
-		}
+
 		if (mail_temp != NULL)
-		{
-			compt+=1;	
-		}
+			compt+=1;
 	}
 
-	//	printf("J'ai %d lettres.\n", compt);
 	return compt;
 }
 
@@ -67,22 +63,22 @@ maillon_t * definir_queue(maillon_t * maillon) {
 //Fonction de conversion d'une liste de maillons en une chaine de caractère
 char* maillon_to_char(maillon_t* maillon){
 	int i;
-	//printf("Je suis dans maillon to char.\n");
-	int nblettres=nb_lettres_maillon(maillon);
-	//printf("J'ai compté les lettres.%d\n",nblettres);
-	char *chaine=(char *)malloc(sizeof(char)*(nblettres+1));
+
+	int nblettres = nb_lettres_maillon(maillon);
+
+	char *chaine = (char *)malloc(sizeof(char)*(nblettres+1));
 
 	maillon_t* mail_temp = maillon;
 
 	for (i = 0; i < nblettres; ++i) {
-		if ((i>=6) && (i%6==0)) {
+		if ((i>=6) && (i%6==0))
 			mail_temp = mail_temp->maillon_suiv;
-			//printf("%08x\n", mail_temp->lettres);
-		}
-		//("%d\n",get_charnum(*mail_temp, i%6));
-		chaine[i]=num_to_char(get_charnum(*mail_temp, i%6));
+
+		chaine[i] = num_to_char(get_charnum(*mail_temp, i%6));
 	}
+
 	chaine[i+1]='\0';
+	
 	return chaine;
 }
 

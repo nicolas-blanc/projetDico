@@ -32,7 +32,8 @@ void affiche_mot(mot_t * mot){
 	emplacement_t * empl = mot->tete_liste;
 
 	char * cmot = maillon_to_char(tete);
-	printf("%s (%08X)  -->", cmot, tete->lettres);
+	printf("%s  -->", cmot);
+
 	while(empl != NULL) {
 		printf("  [%d/%d]", empl->ligne, empl->colonne);
 		empl = empl->empl_suiv;
@@ -71,5 +72,6 @@ int compare_mots(mot_t* mot1, mot_t* mot2) {
 }
 
 void nouvel_emplacement(mot_t * mot, int ligne, int colonne) {
+	// On fait appel à la fonction qui ajoute un emplacement à la suite de queue_liste
 	mot->queue_liste = ajoute_emplacement(mot->queue_liste,ligne,colonne);
 }
