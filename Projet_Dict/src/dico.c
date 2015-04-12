@@ -44,32 +44,40 @@ dico_t * insertion_dictionnaire(dico_t * dico, mot_t * mot) {
 	//*
 	if (d_temp->mot != NULL) {
 		//printf("4.5 : %d\n",compare_mots(d_temp->mot,mot));
-//		while(d_temp != NULL && compare_mots(d_temp->mot,mot) < 0)
-		while(compare_mots(d_temp->mot,mot) < 0 && d_temp->suivant != NULL)
+		while(d_temp != NULL && compare_mots(d_temp->mot,mot) < 0)
+//		while(compare_mots(d_temp->mot,mot) < 0 && d_temp->suivant != NULL)
 		{
 			printf("5 : %d\n",compare_mots(d_temp->mot,mot));
 			pred = d_temp;
 			d_temp = d_temp->suivant;
+//			printf("je lis :");
+//			affiche_mot(d_temp->mot);
 		}
 
-		printf("6 : ");
-		printf("%d\n", compare_mots(d_temp->mot,mot));
-
-		compare = compare_mots(d_temp->mot,mot);
-
-		printf("9\n");
-
-		if (compare == 0) {			
-			printf("8\n");
-			nouvel_emplacement(d_temp->mot,mot->tete_liste->ligne,mot->tete_liste->colonne);
+		if (d_temp == NULL) {
+			pred->suivant = insere_tete(d_temp,mot);
 		} else {
-			if (pred == NULL && compare < 0 ) {
-				dico->suivant = insere_tete(dico->suivant,mot);
-			} else if (pred == NULL) {
-				dico = insere_tete(dico,mot);
+			printf("6 : ");
+			printf("%d\n", compare_mots(d_temp->mot,mot));
+
+			compare = compare_mots(d_temp->mot,mot);
+
+			printf("9\n");
+
+			if (compare == 0) {			
+				printf("8\n");
+				nouvel_emplacement(d_temp->mot,mot->tete_liste->ligne,mot->tete_liste->colonne);
 			} else {
-				pred->suivant = insere_tete(d_temp,mot);
-				printf("7\n");
+				if (pred == NULL && compare < 0 ) {
+					printf("Fuck it, I'm nul with compare\n");
+					d_temp->suivant = insere_tete(d_temp->suivant,mot);
+				} else if (pred == NULL) {
+					printf("Fuck it, I'm nul\n");
+					dico = insere_tete(dico,mot);
+				} else {
+					pred->suivant = insere_tete(d_temp,mot);
+					printf("7\n");
+				}
 			}
 		}
 
