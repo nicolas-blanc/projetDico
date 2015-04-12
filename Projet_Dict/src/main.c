@@ -31,23 +31,20 @@ int main(int argc, char **argv) {
 	unsigned int ligne;
 	unsigned int colonne;
 
-	int i=0;
-	dico_t * dicotest =  (dico_t*)malloc(sizeof(dico_t));
-	dicotest->suivant=NULL;
-	dicotest->mot=NULL;
+	dico_t * dicotest =  nouveau_dictionnaire();
+	mot_t* mot;
 
-if (dicotest!=NULL)
+if (dicotest != NULL)
 
 	while(!feof(mon_fichier)){
-		i=0;
 		char * word = next_word(mon_fichier,&ligne,&colonne);
-		while(word[i]!='\0'){
-			i++;
-		}
-		mot_t* mot =(mot_t*)malloc(sizeof(mot_t));
-		creation_mot(word,ligne,colonne,mot);
+		printf("1\n");
+		mot = creation_mot(word,ligne,colonne);
+		printf("2\n");
 		affiche_mot(mot);
-		dicotest=insertion_dictionnaire(dicotest,mot);
+		printf("3\n");
+		dicotest = insertion_dictionnaire(dicotest,mot);
+		printf("4\n");
 	}
 
 	affiche_dico(dicotest);

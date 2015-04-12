@@ -6,7 +6,7 @@ all: $(EXECS)
 #-L chemin
 #-I
 test1: main.o dico.o maillon.o lettres.o mot.o emplacement.o
-	gcc -Wall -I ./include/ -L./lib/liblinux32/ -o test1 main.o dico.o maillon.o lettres.o mot.o emplacement.o -ltokenize
+	gcc -Wall -I ./include/ -L./lib/liblinux64/ -o test1 main.o dico.o maillon.o lettres.o mot.o emplacement.o -ltokenize
 
 main.o:./src/main.c
 	gcc -Wall -I ./include/ -c ./src/main.c 

@@ -1,32 +1,5 @@
 #include "../include/dico.h"
 
-/*
-// Fonction de correspondance entre un caractère et son code
-uint32_t char_to_num(char carac);
-char num_to_char(uint32_t code);
-
-// Fonction de modification et consultation de la kieme lettre sur un maillon donné (0 <= k <= 5)
-void set_charnum(maillon_t maillon, char carac, int lettre);
-char get_charnum(maillon_t maillon, int lettre);
-
-// Fonction de conversions du chaine de caractère en liste de maillons, et une liste de maillons en chaine de caractère
-
-// Fonction de création d'un élèment de type mot_t
-
-// Fonction d'affichage d'un mot de type mot_t
-
-// Fonction de comparaison de deux mot_t
-// retourne 0 si les deux sont identiques, un entier négatif si le premier est alphabétiquement plus petit, un entier positif sinon
-int compare_mots(mot_t * mot1, mot_t * mot2);
-
-// Fonction d'insertion d'un mot de type mot_t dans un dictionnaire
-// Insère le mot à la fin de la chaine, sans rangement alphabétique et avec duplication
-void insertion_dictionnaire(mot_t * dico, mot_t * mot);
-
-// Fonction d'affichagedu dictionnaire complet
-void affiche_dictionnaire(mot_t * dico);
-*/
-
 void affiche_dico(dico_t* dico){
 	dico_t* temp = dico;
 	printf("Voici le contenu du dictionnaire:\n");
@@ -36,20 +9,79 @@ void affiche_dico(dico_t* dico){
 	}
 }
 
-//Fonction réalisant une simple insertion en tête de liste. 
-dico_t* insere_tete(dico_t* dico, mot_t * mot){
-	dico_t* d = (dico_t*)malloc(sizeof(dico_t));
-	d->mot=mot;
-	d->suivant = dico;
-	return d;
+dico_t * nouveau_dictionnaire() {
+	dico_t * dico = (dico_t*) malloc(sizeof(dico_t));
+	dico->suivant = NULL;
+	dico->mot = NULL;
+
+	return dico;
 }
 
-//Fonction insérant un mot dans un dictionnaire
-dico_t* insertion_dictionnaire(dico_t * dico, mot_t * mot) {
-	
-	dico_t* d_temp = dico;
-	dico_t* pred = NULL;
+//Fonction réalisant une simple insertion en tête de liste. 
+dico_t * insere_tete(dico_t * dico, mot_t * mot) {
+	printf("7.1\n");
+	dico_t * d_temp = nouveau_dictionnaire();
+	d_temp->mot = mot;
+	d_temp->suivant = dico;
+	printf("7.8\n");
+	return d_temp;
+}
 
+
+
+//Fonction insérant un mot dans un dictionnaire
+dico_t * insertion_dictionnaire(dico_t * dico, mot_t * mot) {
+	
+	dico_t * d_temp = dico;
+	dico_t * pred = NULL;
+
+	int compare = 0;
+
+//Si mot1 == mot2 -> 0
+//Si mot1 < mot2 -> -1
+//Si mot1 > mot2 -> 1
+
+	//*
+	if (d_temp->mot != NULL) {
+		//printf("4.5 : %d\n",compare_mots(d_temp->mot,mot));
+//		while(d_temp != NULL && compare_mots(d_temp->mot,mot) < 0)
+		while(compare_mots(d_temp->mot,mot) < 0 && d_temp->suivant != NULL)
+		{
+			printf("5 : %d\n",compare_mots(d_temp->mot,mot));
+			pred = d_temp;
+			d_temp = d_temp->suivant;
+		}
+
+		printf("6 : ");
+		printf("%d\n", compare_mots(d_temp->mot,mot));
+
+		compare = compare_mots(d_temp->mot,mot);
+
+		printf("9\n");
+
+		if (compare == 0) {			
+			printf("8\n");
+			nouvel_emplacement(d_temp->mot,mot->tete_liste->ligne,mot->tete_liste->colonne);
+		} else {
+			if (pred == NULL && compare < 0 ) {
+				dico->suivant = insere_tete(dico->suivant,mot);
+			} else if (pred == NULL) {
+				dico = insere_tete(dico,mot);
+			} else {
+				pred->suivant = insere_tete(d_temp,mot);
+				printf("7\n");
+			}
+		}
+
+	} else {
+		// Si le dico est vide on ajoute le mot
+		dico->mot = mot;
+		dico->suivant = NULL;
+	}
+	//*/
+	
+
+	/*
 	if (d_temp->mot != NULL)
 	{
 		//Le dico est pas vide, on cherche l'emplacement du mot.
@@ -94,6 +126,7 @@ dico_t* insertion_dictionnaire(dico_t * dico, mot_t * mot) {
 		dico->mot = mot;
 		dico->suivant = NULL;
 	}
-
+	//*/
+	affiche_dico(dico);
 	return dico;
 }

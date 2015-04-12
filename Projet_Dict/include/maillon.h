@@ -12,7 +12,6 @@ struct maillon_t {
 	maillon_t * maillon_suiv;
 };
 
-#endif /* MAILLON_H */
 
 // A expliquer dans le rapport
 void set_charnum(maillon_t* maillon,  uint32_t carac, int lettre);
@@ -35,3 +34,5 @@ void mot_to_maillon(char* caracs, int nblettres, maillon_t* first_maillon);
 
 // Fonction qui compare deux maillon et retourne un entier nul si ils sont égaux, négatif si le 1er maillon est plus petit que le 2e maillon, positif sinon
 int compare_maillons(maillon_t * maillon1, maillon_t * maillon2);
+
+#endif /* MAILLON_H */

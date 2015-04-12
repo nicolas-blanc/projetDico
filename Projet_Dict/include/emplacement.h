@@ -13,8 +13,8 @@ struct emplacement_t
 	emplacement_t * empl_suiv;
 };
 
-#endif /* EMPLACEMENT_H */
-
 emplacement_t * initialise_emplacement(unsigned int l, unsigned int c);
 
-void ajoute_emplacement(emplacement_t* emp, int ligne, int colonne);
+emplacement_t * ajoute_emplacement(emplacement_t* emp, int ligne, int colonne);
+
+#endif /* EMPLACEMENT_H */

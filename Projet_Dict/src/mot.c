@@ -12,8 +12,9 @@ int nbLettres(char * caracs) {
 	return i;
 }
 
+mot_t * creation_mot(char * caracs, unsigned int nblin, unsigned int nbcol) {
+	mot_t * mot = (mot_t*) malloc(sizeof(mot_t));
 
-void creation_mot(char * caracs, unsigned int nblin, unsigned int nbcol, mot_t * mot) {
 	maillon_t * maillon = initialise_maillon();
 	emplacement_t * emp = initialise_emplacement(nblin, nbcol);
 
@@ -22,6 +23,8 @@ void creation_mot(char * caracs, unsigned int nblin, unsigned int nbcol, mot_t *
 	mot->queue_mot = definir_queue(maillon);
 	mot->tete_liste = emp;
 	mot->queue_liste = emp;
+
+	return mot;
 }
 
 void affiche_mot(mot_t * mot){
@@ -29,8 +32,7 @@ void affiche_mot(mot_t * mot){
 	emplacement_t * empl = mot->tete_liste;
 
 	char * cmot = maillon_to_char(tete);
-	printf("%s", cmot);
-	printf(" -->");
+	printf("%s (%08X)  -->", cmot, tete->lettres);
 	while(empl != NULL) {
 		printf("  [%d/%d]", empl->ligne, empl->colonne);
 		empl = empl->empl_suiv;
@@ -38,7 +40,7 @@ void affiche_mot(mot_t * mot){
 	printf("\n");
 }
 
-//Fonction de comparasion de mots
+//Fonction de comparaison de mots
 //Si mot1 == mot2 -> 0
 //Si mot1 < mot2 -> -1
 //Si mot1 > mot2 -> 1
@@ -66,4 +68,8 @@ int compare_mots(mot_t* mot1, mot_t* mot2) {
 		}
 	}
 	return compare;
+}
+
+void nouvel_emplacement(mot_t * mot, int ligne, int colonne) {
+	mot->queue_liste = ajoute_emplacement(mot->queue_liste,ligne,colonne);
 }
